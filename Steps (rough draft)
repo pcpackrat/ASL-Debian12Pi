@@ -1,0 +1,91 @@
+Install Debian 12
+
+disable onboard sound and bluetooth in/boot/config.txt: 
+dtoverlay=disable-bt
+dtparam=audio=off
+
+disable bluetooth services:
+systemctl disable hciuart.service
+systemctl disable bluealsa.service
+systemctl disable bluetooth.service
+
+disable serial console in /boot/cmdline.txt:
+Remove reference to serial console
+
+
+sudo apt-get update
+sudo apt-get install hostapd dnsmasq telnet traceroute git
+
+
+Add to tmps for /var/log to fstab:
+tmpfs           /var/log        tmpfs   nodev,nosuid,size=50M   0       0
+
+
+edit apache systemd to create /var/log/apache folder:
+
+/usr/lib/systemd/system/apache2.service:
+
+Install ASL-Asterisk
+git clone https://github.com/Allan-N/ASL-Install.git
+
+Allow www-data to access network devices:
+usermod -aG netdev www-data
+
+add to visudo:
+www-data ALL=(ALL) NOPASSWD: /sbin/iwlist
+www-data ALL=(ALL) NOPASSWD: /usr/bin/nmcli
+www-data ALL=(ALL) NOPASSWD: /usr/sbin/reboot
+
+Make asl-menu load at logon
+
+Build hostap wifi
+
+/etc/dnsmasq.conf:
+
+create 
+/etc/init.d/autohotspot:
+
+chmod +x autohotspot
+
+
+create: /usr/local/bin/start_hostapd.sh
+
+edit /usr/lib/systemd/system/hostapd.service adding ExecStartPre and ExecStopPost
+
+
+WiFi Scan web pages:
+create_config.php
+create scan_wifi.py
+create logon.php
+
+modify apache to load the logon.php for android and apple online checks:
+
+RewriteEngine On
+
+# Redirect Apple devices for captive portal detection
+RewriteRule ^/hotspot-detect.html$ /logon.php [L,R=302]
+
+# Redirect Android devices for captive portal detection
+RewriteRule ^/generate_204$ /logon.php [L,R=302]
+
+# Redirect Windows devices for captive portal detection
+RewriteRule ^/ncsi.txt$ /logon.php [L,R=302]
+
+modify AllowOveride to All in /etc/apache2/apache2.conf:
+
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+</Directory>
+------------------------------------------------------------------
+
+enable openvpn:
+
+
+systemctl enable openvpn-client@client
+
+create a web page to upload vpn configs
+
+create vpn.html
+create upload.php
