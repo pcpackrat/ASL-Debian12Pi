@@ -89,6 +89,8 @@ enable openvpn:
 systemctl enable openvpn-client@client
 
 create a web page to upload vpn configs
-
 create vpn.html
 create upload.php
+
+# Enable simpleusb
+sed -i 's/noload => chan_simpleusb.so/load => chan_simpleusb.so/' modules.conf
