@@ -52,6 +52,9 @@ create: /usr/local/bin/start_hostapd.sh
 
 edit /usr/lib/systemd/system/hostapd.service adding ExecStartPre and ExecStopPost
 
+Make sure hostapd is not enabled and unmasked in systemd:
+systemctl unmask hostapd
+systemctl disable hostapd
 
 WiFi Scan web pages:
 create_config.php
